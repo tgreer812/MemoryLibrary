@@ -1,0 +1,2 @@
+#define MEMORYLIB_API __declspec(dllexport)
+#define MEMORYLIB_API __declspec(dllimport)
