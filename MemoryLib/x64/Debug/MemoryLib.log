@@ -1,3 +1,3 @@
-﻿  LINK : program database C:\Users\tgree\source\repos\MemoryLibrary\MemDLLTest\x64\Debug\MemoryLib.pdb missing; performing full link
+﻿  MemoryLib.cpp
      Creating library C:\Users\tgree\source\repos\MemoryLibrary\MemDLLTest\x64\Debug\MemoryLib.lib and object C:\Users\tgree\source\repos\MemoryLibrary\MemDLLTest\x64\Debug\MemoryLib.exp
   MemoryLib.vcxproj -> C:\Users\tgree\source\repos\MemoryLibrary\MemDLLTest\x64\Debug\MemoryLib.dll

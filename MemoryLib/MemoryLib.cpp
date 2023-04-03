@@ -13,14 +13,14 @@
 
 
 //MEMORYLIB_API 
-int _MemoryScan(DWORD pid, ValueType value_type, const void* value, size_t value_size, uintptr_t start_address, uintptr_t end_address, size_t alignment, uintptr_t* found_addresses, size_t max_found) {
+int _MemoryScan(DWORD pid, ValueType value_type, const void* value, size_t value_size, uintptr_t start_address, uintptr_t end_address, size_t alignment, uintptr_t* found_addresses, size_t max_found, const std::vector<size_t>& input_found_addresses) {
     try {
         size_t i = 0;
 
         switch (value_type) {
         case VT_INTEGER:
             if (value_size == sizeof(int)) {
-                auto addresses = scan_memory<int>(pid, *reinterpret_cast<const int*>(value), start_address, end_address, alignment);
+                auto addresses = scan_memory<int>(pid, *reinterpret_cast<const int*>(value), start_address, end_address, alignment, input_found_addresses);
                 for (const auto& addr : addresses) {
                     if (i < max_found) {
                         found_addresses[i] = addr.first;
@@ -34,7 +34,7 @@ int _MemoryScan(DWORD pid, ValueType value_type, const void* value, size_t value
             break;
         case VT_FLOAT:
             if (value_size == sizeof(float)) {
-                auto addresses = scan_memory<float>(pid, *reinterpret_cast<const float*>(value), start_address, end_address, alignment);
+                auto addresses = scan_memory<float>(pid, *reinterpret_cast<const float*>(value), start_address, end_address, alignment, input_found_addresses);
                 for (const auto& addr : addresses) {
                     if (i < max_found) {
                         found_addresses[i] = addr.first;
@@ -59,6 +59,7 @@ int _MemoryScan(DWORD pid, ValueType value_type, const void* value, size_t value
         return -1;
     }
 }
+
 
 
 extern "C" {

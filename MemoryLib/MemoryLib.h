@@ -26,7 +26,7 @@ struct ModuleInfo
 };
 
 // MemoryLib.h
-MEMORYLIB_API int _MemoryScan(DWORD pid, ValueType value_type, const void* value, size_t value_size, uintptr_t start_address, uintptr_t end_address, size_t alignment, uintptr_t* found_addresses, size_t max_found);
+int _MemoryScan(DWORD pid, ValueType value_type, const void* value, size_t value_size, uintptr_t start_address, uintptr_t end_address, size_t alignment, uintptr_t* found_addresses, size_t max_found, const std::vector<size_t>& input_found_addresses = {});
 
 
 // MemoryLib.h
