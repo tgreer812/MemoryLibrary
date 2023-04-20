@@ -1,0 +1,47 @@
+.login-wrapper {
+	height: 80%;
+	display: flex;
+	flex-direction: column;
+	margin: auto;
+	align-items: center;
+	justify-content: center;
+}
+
+#login-form {
+	display: flex;
+	flex-direction: column;
+}
+
+.login-wrapper label {
+	margin-bottom: .5rem;
+}
+
+.login-wrapper input {
+	width: 10rem;
+}
+
+.login-wrapper #name {
+	margin-bottom: 1rem;
+}
+
+.login-wrapper #password {
+	margin-bottom: 1.5rem;
+}
+
+.login-wrapper #submit {
+	margin-left: .25rem;
+}
+
+.login-wrapper .request {
+	margin-top: 2rem;
+}
+
+.login-wrapper button:hover {
+	cursor: pointer;
+}
+
+.login-wrapper .failed {
+	border-color: red;
+	border-radius: .2rem;
+	color: red;
+}

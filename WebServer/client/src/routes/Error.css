@@ -1,0 +1,15 @@
+.error-wrapper {
+	--error-color: rgb(127, 0, 0);
+
+	padding: 2rem 0 0 2rem;
+}
+
+.error-wrapper h1 {
+	margin: 0;
+	font-size: 2rem;
+	color: var(--error-color);
+}
+
+.error-wrapper p b {
+	color: var(--error-color);
+}

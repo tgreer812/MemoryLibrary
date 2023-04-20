@@ -1,0 +1,6 @@
+const routing = {
+    clienturl: 'http://127.0.0.1:3000', // Edit this line if you need to in the actual routing.js but keep it in the .gitignore so we can keep it separate
+    serverurl: 'http://127.0.0.1:3001',
+}
+
+module.exports = { routing };

@@ -1,0 +1,37 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 200px;
+    background-color: #222222;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+button {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #222222;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-family: 'Sohne', ui-sans-serif, sans-serif;
+    border-radius: 5px;
+}
+
+button i {
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+button:hover {
+    background-color: #333333;
+}

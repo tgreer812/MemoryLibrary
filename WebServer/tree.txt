@@ -1,0 +1,16 @@
+Folder PATH listing
+Volume serial number is 345C-8F22
+C:.
++---build
++---client
+|   +---build
+|   +---public
+|   \---src
+|       +---components
+|       +---routes
+|       \---utility
++---server
+|   +---middleware
+|   +---routes
+|   \---utility
+\---shared
