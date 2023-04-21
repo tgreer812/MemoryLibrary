@@ -11,6 +11,80 @@
 <body>
     <div class="sidebar" id="sidebar">
     </div>
+
+    <div class="main">
+
+        <!-- Found Addresses Section -->
+        <div class="table-section found-addresses">
+            <div class="table-wrapper">
+            <div class="table-container">
+                <table id="table1">
+                <thead>
+                    <tr>
+                    <th>Address</th>
+                    <th>Value</th>
+                    <th>Previous</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Add table rows dynamically here -->
+                </tbody>
+                </table>
+            </div>
+            </div>
+            <div class="down-arrow-container">
+            <button id="downArrowButton"><i class="fa fa-arrow-down"></i></button>
+            </div>
+        </div>
+  
+      
+<!-- Scan Section (upper right quadrant) -->
+<div class="scan-section">
+    <div class="button-container">
+      <button class="new-scan">New Scan</button>
+      <button class="next-scan">Next Scan</button>
+      <button class="undo-scan">Undo Scan</button>
+    </div>
+    <label for="valueInput" class="value-label">Value:</label>
+    <div class="input-group">
+      <input type="text" id="valueInput">
+      <label for="hexCheckbox">
+        <input type="checkbox" id="hexCheckbox"> Hex
+      </label>
+    </div>
+  </div>
+  
+  
+  
+  
+  
+        
+        <!-- Editable Addresses Section (lower left quadrant) -->
+        <div class="table-section editable-addresses">
+          <div class="table-container">
+            <table id="table2">
+              <thead>
+                <tr>
+                  <th>Active</th>
+                  <th>Description</th>
+                  <th>Address</th>
+                  <th>Type</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Add table rows dynamically here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Processes/Debug Section (lower right quadrant) -->
+        <!-- Add content for this section as needed -->
+        <div class="processes-debug-section">
+        </div>
+    </div>
+      
     <script src="script.js"></script>
 </body>
 </html>
