@@ -116,7 +116,7 @@ th, td {
     display: grid;
     grid-template-rows: repeat(30, auto);
     grid-row-gap: 0px;
-    row-gap: px;
+    row-gap: 0px;
   }
   
   .value-label {
