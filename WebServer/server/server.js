@@ -10,7 +10,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 3001;
 const app = express();
-const {database, dbConnect, databaseEnabled} = require('./utility/db');
+const {database, dbConnect, isDatabaseEnabled} = require('./utility/db');
 const apiRouter = require('./routes/api');
 
 // MIDDLEWARE
@@ -38,12 +38,15 @@ app.use(passport.session());
 
 app.use('/api', apiRouter);
 
-// Comment this in when you want to use a database
-//dbConnect();
-if (!databaseEnabled) {
-  console.log('Database not enabled!');
-}
+// If you want to disable a database, go to the db.js file and set the databaseEnabled variable to false.
+dbConnect().then(() => {
+  if (isDatabaseEnabled()) {
+    console.log("Database enabled!");
+  } else {
+    console.log("Database disabled!");
+  }
 
-app.listen(PORT, () => {
-  console.log(`Server listening on ${PORT}`);
+  app.listen(PORT, () => {
+    console.log(`Server listening on ${PORT}`);
+  });
 });

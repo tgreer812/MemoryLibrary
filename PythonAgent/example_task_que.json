@@ -1,0 +1,30 @@
+{
+    "taskqueue": [
+        {
+            "taskid": "1",
+            "command": "scan",
+            "arguments": [
+                "--pid",
+                "1234",
+                "--type",
+                "integer",
+                "--value",
+                "1",
+                "--start",
+                "0",
+                "--stop",
+                "100",
+                "--maxfound",
+                "100000"
+            ]
+        },
+        {
+            "taskid": "2",
+            "command": "process_list",
+            "arguments": [
+                "--maxprocesses",
+                "0"
+            ]
+        }
+    ]
+}

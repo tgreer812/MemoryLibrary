@@ -5,7 +5,20 @@ const userSchema = new mongoose.Schema({
     password: String
 });
 
+const agentSchema = new mongoose.Schema({
+    uuid: String,
+    name: String,
+    ip: String,
+    taskQueue: String,
+    lastSeen: Date,
+    active: Boolean,
+    processlist: String,
+    memoryscan: String,
+    savedaddresses: String,   // this might be best as a json string?
+});
+
 const UserModel = mongoose.model('User', userSchema);
+const AgentModel = mongoose.model('Agent', agentSchema);
 
 const testUser = new UserModel({
   username: 'Tyler',
@@ -26,4 +39,4 @@ UserModel.find({username: 'Tyler'}).exec()
 
 
 //export models
-module.exports = { UserModel };
+module.exports = { UserModel, AgentModel };

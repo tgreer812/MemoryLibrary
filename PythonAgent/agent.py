@@ -2,7 +2,7 @@ import argparse
 import logging
 import time
 import json
-from MemoryLibApi import memLibInit, memory_scan, ValueType, get_value_type, get_process_list, get_module_list
+from MemoryLibApi import mem_lib_init, memory_scan, ValueType, get_value_type, get_process_list, get_module_list
 
 LOG_FORMAT = "[%(levelname)s] %(message)s"
 LOG_DEBUG_FORMAT = "[%(threadName)s-%(filename)s-%(funcName)s-%(lineno)s | %(levelname)s] %(message)s"
@@ -32,11 +32,11 @@ def value_cast(value, value_type):
     else:
         raise ValueError(f"Invalid value type: {value_type}")
 
-def run(args):\
+def run(args):
 
     print(f"config: {args.config}")
     config = json.loads("{\"found_addresses\":[]}")
-    memLibInit("C:\\Users\\tgree\\source\\repos\\MemoryLibrary\\MemDLLTest\\x64\\Debug\\MemoryLib.dll")
+    mem_lib_init("C:\\Users\\tgree\\source\\repos\\MemoryLibrary\\MemDLLTest\\x64\\Debug\\MemoryLib.dll")
 
     if args.scan:
         pid = args.pid

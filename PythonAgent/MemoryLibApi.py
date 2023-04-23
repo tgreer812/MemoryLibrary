@@ -63,7 +63,7 @@ def require_init(func):
     return wrapper
 
 
-def memLibInit(dllPath):
+def mem_lib_init(dllPath):
     global MemDll, dll, GetModuleListFunc, GetModuleList, MemoryScan
 
     MemDll = dllPath

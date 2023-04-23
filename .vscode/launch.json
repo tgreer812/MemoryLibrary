@@ -28,6 +28,14 @@
                 "--config",
                 "{\"found_addresses\":[]}"
             ]
+        },
+        {
+            "name": "Python: Client",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/PythonAGent/client.py",
+            "args": ["--host", "127.0.0.1", "--port", "3001", "--debug"],
+            "console": "integratedTerminal"
         }
         
         
