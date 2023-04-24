@@ -9,7 +9,7 @@ agentRouter.use('/', (req, res, next) => {
 });
 
 //let test_task = {"taskqueue":[{"taskid":"1","command":"scan","arguments":["--pid","1234","--type","integer","--value","1","--start","0","--stop","100","--maxfound","100000"]},{"taskid":"2","command":"process_list","arguments":["--maxprocesses","0"]}]};
-let test_task = {"taskqueue":[{"taskid":"2","command":"process_list","arguments":["--maxprocesses","1024"]}]};
+let test_task = {"task_queue":[{"taskid":2,"command":"process_list","arguments":["--maxprocesses","1024"]}]};
 
 agentRouter.get('/:uuid', async (req, res) => {
     // print out the UUID
@@ -28,10 +28,12 @@ agentRouter.get('/:uuid', async (req, res) => {
             const newAgentObj = {
                 uuid: req.params.uuid,
                 name: "",
-                tasks: "",
-                lastSeen: new Date(),
+                ip: req.socket.remoteAddress,
+                task_queue: "[]",
+                last_seen: new Date(),
                 active: true,
-                ip: req.socket.remoteAddress
+                command_results: "{}",
+                saved_addresses: "{}",                
             };
 
             let newAgent = await database.createAgent(newAgentObj);
@@ -61,7 +63,7 @@ agentRouter.post('/:uuid/:taskid', async (req, res) => {
         }
 
         // If agent is found, update the agent
-        let updatedAgent = await database.updateAgentByUUID(req.params.uuid, req.body);
+        let updatedAgent = await database.updateAgentByUUID(req.params.uuid, req.params.taskid, req.body);
 
     } catch (err) {
         console.log(err);

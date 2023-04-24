@@ -9,12 +9,11 @@ const agentSchema = new mongoose.Schema({
     uuid: String,
     name: String,
     ip: String,
-    taskQueue: String,
-    lastSeen: Date,
+    task_queue: String,      // this is a json string. See example_task_queue.json in PythonAgent
+    last_seen: Date,
     active: Boolean,
-    processlist: String,
-    memoryscan: String,
-    savedaddresses: String,   // this might be best as a json string?
+    command_results: String,   // JSON string - these get populated directly from the agent. See commands.js for examples
+    saved_addresses: String,   // this might be best as a json string?
 });
 
 const UserModel = mongoose.model('User', userSchema);

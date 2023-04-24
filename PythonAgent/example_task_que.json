@@ -1,7 +1,7 @@
 {
-    "taskqueue": [
+    "task_queue": [
         {
-            "taskid": "1",
+            "taskid": 1,
             "command": "scan",
             "arguments": [
                 "--pid",

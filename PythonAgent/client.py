@@ -24,15 +24,24 @@ def get_client_uuid():
         with open(UUID_FILE, "w") as file:
             file.write(new_uuid)
         return new_uuid
+    
+def send_task_result(client_uuid, host, port, task_id, response_body):
+    try:
+        response = requests.post(f"http://{host}:{port}/api/agent/{client_uuid}/{task_id}", json=response_body)
+        if response.status_code != 200:
+            log.error(f"Error while sending task result: {response.status_code}")
+    except Exception as e:
+        log.error(f"Error while sending task result: {e}")
 
-def handle_tasks(task):
-    log.debug(f"Received task: {task}\n")
+def handle_tasks(client_uuid, host, port, tasks):
+    log.debug(f"Received task: {tasks}\n")
 
-    task_queue = task["taskqueue"]
+    task_queue = tasks["task_queue"]
     for task in task_queue:
         log.debug(f"Handling task: {task}")
-        handle_task(task)
-
+        response_body = handle_task(task)
+        task_id = task["taskid"]
+        send_task_result(client_uuid, host, port, task_id, response_body)
 
 def tasking_loop(client_uuid, host, port):
 
@@ -43,7 +52,7 @@ def tasking_loop(client_uuid, host, port):
 
             if response.status_code == 200:
                 task_que = response.json()
-                handle_tasks(task_que)
+                handle_tasks(client_uuid, host, port, task_que)
             
             elif response.status_code == 404:
                 log.debug("No tasking")

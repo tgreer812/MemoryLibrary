@@ -43,10 +43,15 @@ def process_list(args=None):
 
     print(f"Process list command with args: {args}")
     proc_list = []
+    response = {}
+    response["processes"] = []
     MemoryLibApi.get_process_list(proc_list, args.maxprocesses)
     for proc in proc_list:
         print(f"Process: {proc.processName} PID: {proc.processID}")
+        response["processes"].append({"name": proc.processName, "pid": proc.processID})
     print(f"Found {len(proc_list)} processes...")
+
+    return response
 
 def handle_task(task):
     global MEM_LIB_INITIALIZED
@@ -68,6 +73,20 @@ def handle_task(task):
 
     try:
         args = parser.parse_args(arguments)
-        command_func(args)
+        command_response = command_func(args)
+
+        if not command_response:
+            command_response = {}
+            log.error(f"Command {command_name} returned no response")
+
+        response = {
+            command_name: command_response
+        }
+
+        print(f"Response: {response}")
+        return response
+
     except argparse.ArgumentError as e:
         log.error(f"Error in arguments: {e}")
+
+    return {}

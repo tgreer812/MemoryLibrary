@@ -72,7 +72,7 @@ const database = {
         return null;
       }
   
-      foundAgent.lastSeen = new Date();
+      foundAgent.last_seen = new Date();
       foundAgent.active = true;
       await foundAgent.save();
       return foundAgent;
@@ -82,7 +82,7 @@ const database = {
     }
   },
 
-  async updateAgentByUUID(uuid, taskResponse) {
+  async updateAgentByUUID(uuid, taskid, taskResponse) {
     try {
       const foundAgent = await AgentModel.findOne({ uuid });
   
@@ -90,9 +90,7 @@ const database = {
         return null;
       }
 
-      handleAgentTaskResponse(taskResponse, foundAgent);
-  
-      await foundAgent.save();
+      await handleAgentTaskResponse(taskid, taskResponse, foundAgent);
       return foundAgent;
     } catch (err) {
       console.error("Error in getAgentByUUID:", err);
