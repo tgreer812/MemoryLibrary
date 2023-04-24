@@ -30,7 +30,7 @@ let handleAgentTaskResponse = async (taskID, taskResponse, agent) => {
 
     console.log("agent task queue:", agent.task_queue);
     // Use task ID to get taskQueue from agent
-    let taskQueue = JSON.parse(agent.task_queue);
+    let taskQueue = agent.task_queue;
 
     console.log("Task queue:", taskQueue);
     // Get the task from the taskQueue
@@ -56,7 +56,7 @@ let handleAgentTaskResponse = async (taskID, taskResponse, agent) => {
         console.log("Removing the ")
 
         // Update the agent's taskQueue
-        agent.task_queue = JSON.stringify(taskQueue);
+        agent.task_queue = taskQueue;
 
         // Save the agent
         await agent.save();
@@ -116,17 +116,18 @@ let handleScanTaskResponse = async (taskResponse, agent) => {
  * 
  */
 let handleProcessListTaskResponse = async (taskResponse, agent) => {
-
     try {
         // Get the process list json
         let processList = taskResponse.process_list;
 
-        // Update command results
-        let commandResults = JSON.parse(agent.command_results);
-        commandResults["process_list"] = processList;
+        // Ensure command_results is defined
+        if (!agent.command_results) {
+            agent.command_results = {};
+        }
 
-        // Update agent
-        agent.command_results = JSON.stringify(commandResults);
+        // Update command results
+        agent.command_results["process_list"] = processList;
+
     } catch (err) {
         console.log(err);
         return false;
@@ -134,6 +135,8 @@ let handleProcessListTaskResponse = async (taskResponse, agent) => {
 
     return true;
 };
+
+
 
 let handleProcMapping = {
     "scan": handleScanTaskResponse,

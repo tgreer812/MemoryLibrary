@@ -29,11 +29,11 @@ agentRouter.get('/:uuid', async (req, res) => {
                 uuid: req.params.uuid,
                 name: "",
                 ip: req.socket.remoteAddress,
-                task_queue: "[]",
+                task_queue: [],
                 last_seen: new Date(),
                 active: true,
-                command_results: "{}",
-                saved_addresses: "{}",                
+                command_results: {},
+                saved_addresses: {},
             };
 
             let newAgent = await database.createAgent(newAgentObj);
