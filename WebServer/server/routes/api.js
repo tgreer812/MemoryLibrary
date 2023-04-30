@@ -4,6 +4,7 @@ const apiRouter = express.Router();
 const { database, isDatabaseEnabled } = require('../utility/db');
 const { routing } = require('../../shared/routing');
 const agentRouter = require('./agent');
+const adminRouter = require('./admin');
 const clienturl = routing.clienturl;
 const serverurl = routing.serverurl;
 
@@ -26,5 +27,6 @@ let databaseRequired = (req, res, next) => {
 }
 
 apiRouter.use('/agent', databaseRequired, agentRouter);
+apiRouter.use('/admin', databaseRequired, adminRouter);
 
 module.exports = apiRouter;

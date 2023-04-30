@@ -25,33 +25,39 @@ def get_client_uuid():
             file.write(new_uuid)
         return new_uuid
     
-def send_task_result(client_uuid, host, port, task_id, response_body):
+def send_task_result(client_uuid : str, host : str, port : int, task_id : int, response_body : dict):
     try:
         response = requests.post(f"http://{host}:{port}/api/agent/{client_uuid}/{task_id}", json=response_body)
         if response.status_code != 200:
+            return False
             log.error(f"Error while sending task result: {response.status_code}")
     except Exception as e:
         log.error(f"Error while sending task result: {e}")
+        return False
+    return True
 
-def handle_tasks(client_uuid, host, port, tasks):
-    log.debug(f"Received task: {tasks}\n")
+def handle_tasks(client_uuid, host, port, tasks : list):
+    log.debug(f"Received tasks: {tasks}\n")
 
-    task_queue = tasks["task_queue"]
-    for task in task_queue:
+    for task in tasks:
         log.debug(f"Handling task: {task}")
         response_body = handle_task(task)
         task_id = task["taskid"]
-        send_task_result(client_uuid, host, port, task_id, response_body)
+        if send_task_result(client_uuid, host, port, task_id, response_body):
+            log.debug(f"Successfully sent task result for task {task_id}")
+
 
 def tasking_loop(client_uuid, host, port):
 
     while True:
 
         try:
-            response = requests.get(f"http://{host}:{port}/api/agent/{client_uuid}")
+            response = requests.get(f"http://{host}:{port}/api/agent/{client_uuid}/taskqueue")
 
             if response.status_code == 200:
                 task_que = response.json()
+                log.debug(f"Received tasking: {task_que}")
+                log.debug(f"Type: {type(task_que)}")
                 handle_tasks(client_uuid, host, port, task_que)
             
             elif response.status_code == 404:
@@ -59,7 +65,8 @@ def tasking_loop(client_uuid, host, port):
             else:
                 log.error(f"Unknown response code: {response.status_code}")
         except Exception as e:
-            log.error(f"Error while retrieving tasking: {e}")
+            log.error("Error while retrieving tasking:")
+            log.error(e)
 
         time.sleep(HEARTBEAT_INTERVAL)
 

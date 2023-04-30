@@ -12,6 +12,36 @@
     <div class="sidebar" id="sidebar">
     </div>
 
+    <script type="text/javascript">
+      async function clickMe() {
+        console.log("taskAgent called");
+        // todo: make this param
+        agent = "1c25be98-15cb-4597-bee3-12c8ca62685c";
+
+        // hardcode data for now
+        data = {
+            "taskid": "1",
+            "command": "process_list",
+            arguments: ['--maxprocesses', '0'],
+        };
+        // todo dont hardcode this
+        let clienturl = "http://127.0.0.1:3001";
+        let path = "/api/admin/task/" + agent;
+        try {
+            const response = await fetch(clienturl + path, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            console.log('Success', result);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+      }
+    </script>
     <div class="main">
 
         <!-- Found Addresses Section -->
@@ -38,27 +68,22 @@
         </div>
   
       
-<!-- Scan Section (upper right quadrant) -->
-<div class="scan-section">
-    <div class="button-container">
-      <button class="new-scan">New Scan</button>
-      <button class="next-scan">Next Scan</button>
-      <button class="undo-scan">Undo Scan</button>
-    </div>
-    <label for="valueInput" class="value-label">Value:</label>
-    <div class="input-group">
-      <input type="text" id="valueInput">
-      <label for="hexCheckbox">
-        <input type="checkbox" id="hexCheckbox"> Hex
-      </label>
-    </div>
-  </div>
+        <!-- Scan Section (upper right quadrant) -->
+        <div class="scan-section">
+          <div class="button-container">
+            <button class="new-scan">New Scan</button>
+            <button class="next-scan">Next Scan</button>
+            <button class="undo-scan">Undo Scan</button>
+          </div>
+          <label for="valueInput" class="value-label">Value:</label>
+          <div class="input-group">
+            <input type="text" id="valueInput">
+            <label for="hexCheckbox">
+              <input type="checkbox" id="hexCheckbox"> Hex
+            </label>
+          </div>
+        </div>
   
-  
-  
-  
-  
-        
         <!-- Editable Addresses Section (lower left quadrant) -->
         <div class="table-section editable-addresses">
           <div class="table-container">
@@ -82,7 +107,22 @@
         <!-- Processes/Debug Section (lower right quadrant) -->
         <!-- Add content for this section as needed -->
         <div class="processes-debug-section">
+          <button id="listProcessesButton" onclick="clickMe()">List Processes</button>
+          <div class="table-container">
+            <table id="processesTable">
+              <thead>
+                <tr>
+                  <th>PID</th>
+                  <th>Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Add table rows dynamically here -->
+              </tbody>
+            </table>
+          </div>
         </div>
+    
     </div>
       
     <script src="script.js"></script>

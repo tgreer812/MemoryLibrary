@@ -64,6 +64,30 @@ const database = {
     }
   },
 
+  async getAllAgents() {
+    try {
+      const agents = await AgentModel.find({});
+
+      if (!agents) {
+        return null;
+      }
+
+      return agents;
+    } catch (err) {
+      console.error("Error in getAllAgents:", err);
+      throw err;
+    }
+  },
+
+  /**
+   * @brief Gets an agent by its UUID
+   * 
+   * This may need to be updated to have a param to bool "update" last_seen and active
+   * in case you want to retrieve them without updating them.
+   * 
+   * @param {*} uuid 
+   * @returns 
+   */
   async getAgentByUUID(uuid) {
     try {
       const foundAgent = await AgentModel.findOne({ uuid });
@@ -82,7 +106,100 @@ const database = {
     }
   },
 
-  async updateAgentByUUID(uuid, taskid, taskResponse) {
+  /**
+   * @brief Gets an agent by its UUID and updates it with the given data
+   * @param {*} uuid 
+   * @param {*} data 
+   * @returns 
+   */
+  async updateAgentByUUID(uuid, data) {
+    try {
+      const foundAgent = await AgentModel.findOne({ uuid });
+  
+      if (!foundAgent) {
+        return null;
+      }
+  
+      // Update the agent with the new data
+      Object.keys(data).forEach((key) => {
+        foundAgent[key] = data[key];
+      });
+
+      await foundAgent.save();
+      return foundAgent;
+    } catch (err) {
+      console.error("Error in updateAgentByUUID:", err);
+      throw err;
+    }
+  },
+
+  async processAgentTaskResultByUUID(uuid, taskid, result) {
+    try {
+      const agent = await AgentModel.findOne({ uuid });
+  
+      if (!agent) {
+        throw new Error('Agent not found');
+      }
+  
+      // Grab the command from the task_queue
+      let command = agent.task_queue.find((task) => task.taskid === taskid).command;
+      console.log("Command corresponding to result:", command);
+
+      let command_results = agent.command_results;
+      if (!command_results) {
+        command_results = {
+          [command]: result
+        };
+      } else {
+        command_results[command] = result;
+      }
+
+      agent.command_results = command_results;
+      //console.log("Agent command results:", agent.command_results);
+      // Mark the command_results field as modified
+      //agent.markModified('command_results');
+  
+      // Remove the task from the task_queue
+      agent.task_queue = agent.task_queue.filter((task) => task.taskid !== taskid);
+  
+      // Update the last_seen field
+      agent.last_seen = new Date();
+  
+      // Save the updated agent document
+      await agent.save();
+  
+      return agent;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  },
+      
+  async removeAgentTaskByUUID(uuid, taskid) {
+    try {
+      const foundAgent = await AgentModel.findOne({ uuid });
+
+      if (!foundAgent) {
+        return null;
+      }
+
+      foundAgent.task_queue = foundAgent.task_queue.filter((task) => task.taskid !== taskid);
+      await foundAgent.save();
+      return foundAgent;
+    } catch (err) {
+      console.error("Error in removeAgentTaskByUUID:", err);
+      throw err;
+    }
+  },
+
+  /**
+   * 
+   * @param {*} uuid 
+   * @param {*} command Example: "process_list"
+   * @param {*} command_args  Example: { "--maxprocesses", "1024" }
+   * @returns 
+   */
+  async taskAgentByUUID(uuid, command, command_args) {
     try {
       const foundAgent = await AgentModel.findOne({ uuid });
   
@@ -90,13 +207,27 @@ const database = {
         return null;
       }
 
-      await handleAgentTaskResponse(taskid, taskResponse, foundAgent);
+      // Find the first available taskid
+      let taskid = 0;
+      while (foundAgent.task_queue.find((task) => task.taskid === taskid)) {
+        taskid++;
+      }
+
+      // Add the task to the agent's task queue
+      const task = {
+        taskid : taskid,
+        command : command,
+        arguments : command_args
+      };
+
+      foundAgent.task_queue.push(task);
+      await foundAgent.save();
       return foundAgent;
     } catch (err) {
-      console.error("Error in getAgentByUUID:", err);
+      console.error("Error in taskAgentByUUID:", err);
       throw err;
     }
-  },
+  }
   
 
 };

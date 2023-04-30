@@ -1,0 +1,9 @@
+/* Common styles for editable addresses section and other components */
+
+.table-container {
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 20px;
+    margin-bottom: 10px;
+  }
+  

@@ -22,9 +22,9 @@ const agentSchema = new mongoose.Schema({
   saved_addresses: Object,
 });
 
-const UserModel = mongoose.model('User', userSchema);
-const AgentModel = mongoose.model('Agent', agentSchema);
-const TaskModel = mongoose.model('Task', taskSchema);
+const UserModel   = mongoose.model('User', userSchema);
+const AgentModel  = mongoose.model('Agent', agentSchema);
+const TaskModel   = mongoose.model('Task', taskSchema);
 
 const testUser = new UserModel({
   username: 'Tyler',
@@ -42,32 +42,28 @@ UserModel.find({ username: 'Tyler' }).exec()
     console.log(err);
   });
 
-const uuid = '1c25be98-15cb-4597-bee3-12c8ca62685c';
-const initialTask = {
-    taskid: 2,
-    command: 'process_list',
-    arguments: ['--maxprocesses', '0'],
-};
+//const uuid = '1c25be98-15cb-4597-bee3-12c8ca62685c';
 
-AgentModel.findOne({ uuid }).exec()
-    .then((foundAgent) => {
-        if (!foundAgent) {
-            console.log('Agent not found! Creating agent...');
-            const newAgent = new AgentModel({
-                uuid,
-                name: '',
-                ip: '::ffff:127.0.0.1',
-                task_queue: [initialTask],
-                last_seen: new Date(),
-                active: true,
-                command_results: {},
-                saved_addresses: {},
-            });
-            newAgent.save();
-        }
-    })
-    .catch((err) => {
-        console.log(err);
-    });
+
+// AgentModel.findOne({ uuid }).exec()
+//     .then((foundAgent) => {
+//         if (!foundAgent) {
+//             console.log('Agent not found! Creating agent...');
+//             const newAgent = new AgentModel({
+//                 uuid,
+//                 name: '',
+//                 ip: '::ffff:127.0.0.1',
+//                 task_queue: [],
+//                 last_seen: new Date(),
+//                 active: true,
+//                 command_results: {},
+//                 saved_addresses: {},
+//             });
+//             newAgent.save();
+//         }
+//     })
+//     .catch((err) => {
+//         console.log(err);
+//     });
 
 module.exports = { UserModel, AgentModel, TaskModel };

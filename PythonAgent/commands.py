@@ -47,9 +47,7 @@ def process_list(args=None):
     response["processes"] = []
     MemoryLibApi.get_process_list(proc_list, args.maxprocesses)
     for proc in proc_list:
-        print(f"Process: {proc.processName} PID: {proc.processID}")
         response["processes"].append({"name": proc.processName, "pid": proc.processID})
-    print(f"Found {len(proc_list)} processes...")
 
     return response
 
@@ -69,10 +67,13 @@ def handle_task(task):
     command_func = COMMANDS[command_name]
     arguments = task.get("arguments", [])
 
-    parser = command_func()  # Add command-specific arguments to the parser
+    # Add command-specific arguments to the parser
+    parser = command_func()  
 
     try:
         args = parser.parse_args(arguments)
+
+        # Call the command function with the arguments
         command_response = command_func(args)
 
         if not command_response:
@@ -83,7 +84,6 @@ def handle_task(task):
             command_name: command_response
         }
 
-        print(f"Response: {response}")
         return response
 
     except argparse.ArgumentError as e:

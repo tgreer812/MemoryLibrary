@@ -9,9 +9,9 @@ agentRouter.use('/', (req, res, next) => {
 });
 
 //let test_task = {"taskqueue":[{"taskid":"1","command":"scan","arguments":["--pid","1234","--type","integer","--value","1","--start","0","--stop","100","--maxfound","100000"]},{"taskid":"2","command":"process_list","arguments":["--maxprocesses","0"]}]};
-let test_task = {"task_queue":[{"taskid":2,"command":"process_list","arguments":["--maxprocesses","1024"]}]};
+//let test_task = {"task_queue":[{"taskid":2,"command":"process_list","arguments":["--maxprocesses","1024"]}]};
 
-agentRouter.get('/:uuid', async (req, res) => {
+agentRouter.get('/:uuid/taskqueue', async (req, res) => {
     // print out the UUID
     console.log(req.params.uuid);
 
@@ -22,7 +22,7 @@ agentRouter.get('/:uuid', async (req, res) => {
         // if agent is found, return the agent and tasks
         if (agent) {
             console.log(agent);
-            return res.status(200).send(test_task);
+            return res.status(200).send(agent.task_queue);
         } else {
             // if agent is not found, create it
             const newAgentObj = {
@@ -47,12 +47,17 @@ agentRouter.get('/:uuid', async (req, res) => {
     }
 });
 
+
+
+// Use this endpoint to save task results
 agentRouter.post('/:uuid/:taskid', async (req, res) => {
     // print out the UUID
     console.log(req.params.uuid);
     console.log(req.params.taskid);
     console.log(req.body);
 
+    // convert taskid to integer
+    let taskid = parseInt(req.params.taskid);
     try {
         // try to retrieve agent from database
         let agent = await database.getAgentByUUID(req.params.uuid);
@@ -63,7 +68,8 @@ agentRouter.post('/:uuid/:taskid', async (req, res) => {
         }
 
         // If agent is found, update the agent
-        let updatedAgent = await database.updateAgentByUUID(req.params.uuid, req.params.taskid, req.body);
+        console.log("Updating agent task results");
+        let updatedAgent = await database.processAgentTaskResultByUUID(req.params.uuid, taskid, req.body);
 
     } catch (err) {
         console.log(err);

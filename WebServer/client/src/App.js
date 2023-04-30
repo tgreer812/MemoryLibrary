@@ -1,24 +1,28 @@
 import './App.css';
-import { useEffect, useState, useContext } from 'react';
-import Backend from './utility/backend';
-import { UserContext } from './utility/auth';
-import { routing } from './shared/routing';
+import React, { useState } from 'react';
+import Sidebar from './components/Sidebar';
+import FoundAddressesSection from './components/FoundAddressesSection';
+import ScanSection from './components/ScanSection';
+import EditableAddressesSection from './components/EditableAddressesSection';
+import ProcessesDebugSection from './components/ProcessesDebugSection';
 
 function App() {
+  const [selectedAgentUUID, setSelectedAgentUUID] = useState(null);
 
-  const username = useContext(UserContext);
-
-  async function logout() {
-    const response = await Backend.logoutUser();
-    console.log("Logout res", response);
-    window.location.replace(routing.clienturl + '/login');
-  }
+  const handleAgentSelected = (uuid) => {
+    console.log("Agent selected: " + uuid);
+    setSelectedAgentUUID(uuid);
+  };
 
   return (
-    <div className='app-wrapper'>
-      <button className='logout' onClick={logout}>Log Out</button>
-      <h1>Welcome, {username}!</h1>
-      <h2>Select an option below to get started</h2>
+    <div className="App">
+      <Sidebar onAgentSelected={handleAgentSelected} />
+      <div className="main">
+        <FoundAddressesSection agentUUID={selectedAgentUUID} />
+        <ScanSection agentUUID={selectedAgentUUID} />
+        <EditableAddressesSection agentUUID={selectedAgentUUID} />
+        <ProcessesDebugSection agentUUID={selectedAgentUUID} />
+      </div>
     </div>
   );
 }

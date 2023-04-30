@@ -35,8 +35,6 @@ const table1Data = [
   ['0x00123456', '123', '100'],
   ['0x00123457', '200', '150'],
   ['0x00123458', '50', '25'],
-  
- 
 ];
 
 table1Data.forEach(rowData => {
@@ -66,3 +64,34 @@ table2Data.forEach(rowData => {
   });
   table2.appendChild(row);
 });
+
+// Add sample data to the Processes table (new code)
+const processesTable = document.getElementById('processesTable');
+const processesTableData = [
+  ['1234', 'Process A'],
+  ['5678', 'Process B'],
+  ['9101', 'Process C'],
+  ['1234', 'Process A'],
+  ['5678', 'Process B'],
+  ['9101', 'Process C'],
+  ['1234', 'Process A'],
+  ['5678', 'Process B'],
+  ['9101', 'Process C'],
+  ['1234', 'Process A'],
+  ['5678', 'Process B'],
+  ['9101', 'Process C'],
+  ['1234', 'Process A'],
+  ['5678', 'Process B'],
+  ['9101', 'Process C'],
+];
+
+processesTableData.forEach(rowData => {
+  const row = document.createElement('tr');
+  rowData.forEach(cellData => {
+    const cell = document.createElement('td');
+    cell.textContent = cellData;
+    row.appendChild(cell);
+  });
+  processesTable.appendChild(row);
+});
+
