@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Table from './Table';
 import Backend from '../utility/backend';
 import './ProcessesDebugSection.css';
@@ -14,29 +14,41 @@ const ProcessesDebugSection = ({ agentUUID }) => {
             let command = "process_list";
             let command_args = [ "--maxprocesses", "1024" ];
 
-            const response = await Backend.taskAgentByUUID(agentUUID, command, command_args);
-            if (response) {
-                setProcesses(response);
-            }
-            else {
-                console.log("Error: response is null");
-                setProcesses([]);
-            }
-        } else {
-            setProcesses([]);
+            const processes = await Backend.taskAgentByUUID(agentUUID, command, command_args);
+            if (processes) {
+                return processes;
+            }  
         }
+        return [];
     };
 
+    const getProcesses = useCallback(async () => {
+        if (agentUUID) {
+            const agent = await Backend.getAgentByUUID(agentUUID);
+            if (agent) {
+                try {
+                    const processes = agent.command_results.process_list.process_list.processes;
+                    return processes;
+                } catch (err) {
+                    console.log("Error: " + err);
+                }
+            }
+        }
+        return [];
+    }, [agentUUID]);
+
     const handleListProcessesButtonClick = async () => {
-        // Handle "List Processes" button click here.
         alert("List Processes button clicked!");
-        await fetchProcesses();
+        let processes = await fetchProcesses();
+        console.log("Processes: " + JSON.stringify(processes));
+        setProcesses(processes);
     };
 
     useEffect(() => {
-    
-        //fetchProcesses();
-    }, [agentUUID]);
+        (async () => {
+            setProcesses(await getProcesses());
+        })();
+    }, [agentUUID, getProcesses]);
 
     const headers = ['PID', 'Name'];
     const rows = processes.map((process) => [process.pid, process.name]);

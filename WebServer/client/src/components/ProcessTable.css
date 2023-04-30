@@ -1,0 +1,8 @@
+.process-table-row {
+    cursor: pointer;
+}
+  
+.process-table-row.hovered {
+    background-color: #f0f0f0;
+}
+  

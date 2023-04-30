@@ -93,7 +93,7 @@ let Backend = {
 
     async getAgentTaskId(uuid) {
         console.log("getAgentTaskId called");
-        let path = "/api/admin/" + uuid + "/taskqueue";
+        let path = "/api/admin/agent/" + uuid + "/taskqueue";
         try {
             const response = await fetch(clienturl + path, {
                 method: 'GET',
@@ -122,7 +122,7 @@ let Backend = {
             command: command,
             arguments: command_args
         };
-        let path = "/api/admin/" + uuid + "/taskqueue";
+        let path = "/api/admin/agent/" + uuid + "/taskqueue";
         try {
             const response = await fetch(clienturl + path, {
                 method: 'POST',
@@ -140,7 +140,7 @@ let Backend = {
 
     async getAgentList() {
         console.log("getAgentList called");
-        let path = "/api/admin/agents";
+        let path = "/api/admin/agents/";
         try {
             console.log("fetching agent list from server: " + serverurl + path);
             const response = await fetch(clienturl + path, {

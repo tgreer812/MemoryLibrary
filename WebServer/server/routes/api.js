@@ -9,7 +9,7 @@ const clienturl = routing.clienturl;
 const serverurl = routing.serverurl;
 
 apiRouter.use('/', (req, res, next) => {
-    console.log(req.session);
+    //console.log(req.session);
     next();
 });
 

@@ -2,7 +2,7 @@ const express = require('express');
 const adminRouter = express.Router();
 const { database } = require("../utility/db.js");
 
-adminRouter.post('/:agent_uuid/taskqueue', async (req, res) => {
+adminRouter.post('/agent/:agent_uuid/taskqueue', async (req, res) => {
     console.log("tasking agent endpoint hit");
     const uuid = req.params.agent_uuid;
 
@@ -18,7 +18,7 @@ adminRouter.post('/:agent_uuid/taskqueue', async (req, res) => {
 });
 
 adminRouter.get('/agents', async (req, res) => {
-    console.log("get agents endpoint hit");
+    // console.log("get agents endpoint hit");
     try {
         let agents = await database.getAllAgents();
         return res.status(200).send(agents);
@@ -46,35 +46,43 @@ adminRouter.put('/agent/:agent_uuid', async (req, res) => {
     }
 });
 
-adminRouter.get('/:uuid/taskqueue', async (req, res) => {
+adminRouter.get('/agent/:uuid/', async (req, res) => {
     // print out the UUID
     console.log(req.params.uuid);
 
     try {
         // try to retrieve agent from database
         let agent = await database.getAgentByUUID(req.params.uuid);
+        console.log("agent found!: " + agent);
+        // if agent is found, return the agent and tasks
+        if (agent) {
+            console.log(agent);
+            return res.status(200).send(agent);
+        } else {
+            // if agent is not found, return 404
+            return res.status(404).send("Agent not found!");
+        }
+    } catch (err) {
+        console.log(err);
+        return res.status(500).send("Error processing agent request!");
+    }
+});
 
+adminRouter.get('/agent/:uuid/taskqueue', async (req, res) => {
+    // print out the UUID
+    console.log(req.params.uuid);
+
+    try {
+        // try to retrieve agent from database
+        let agent = await database.getAgentByUUID(req.params.uuid);
+        console.log("agent found!: " + agent);
         // if agent is found, return the agent and tasks
         if (agent) {
             console.log(agent);
             return res.status(200).send(agent.task_queue);
         } else {
-            // if agent is not found, create it
-            const newAgentObj = {
-                uuid: req.params.uuid,
-                name: "",
-                ip: req.socket.remoteAddress,
-                task_queue: [],
-                last_seen: new Date(),
-                active: true,
-                command_results: {},
-                saved_addresses: {},
-            };
-
-            let newAgent = await database.createAgent(newAgentObj);
-
-            console.log(newAgent);
-            return res.status(201).send(newAgent);
+            // if agent is not found, return 404
+            return res.status(404).send("Agent not found!");
         }
     } catch (err) {
         console.log(err);
