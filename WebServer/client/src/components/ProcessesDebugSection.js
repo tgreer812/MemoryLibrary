@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import Table from './Table';
+//import Table from './Table';
 import Backend from '../utility/backend';
+import ProcessTable from './ProcessTable';
 import './ProcessesDebugSection.css';
 
 const ProcessesDebugSection = ({ agentUUID }) => {
@@ -44,6 +45,12 @@ const ProcessesDebugSection = ({ agentUUID }) => {
         setProcesses(processes);
     };
 
+    const handleRowClick = (row, rowIndex) => {
+        const pid = row[0]; // Assuming the PID is in the first column
+        alert(`Selected PID: ${pid}`);
+        // You can pass the PID up to the parent App component here
+      };
+
     useEffect(() => {
         (async () => {
             setProcesses(await getProcesses());
@@ -55,12 +62,12 @@ const ProcessesDebugSection = ({ agentUUID }) => {
 
     return (
         <div className="processes-debug-section">
-            <button id="listProcessesButton" onClick={handleListProcessesButtonClick}>
+          <button id="listProcessesButton" onClick={handleListProcessesButtonClick}>
             List Processes
-            </button>
-            <div className="table-container">
-                <Table headers={headers} rows={rows} />
-            </div>
+          </button>
+          <div className="table-container">
+            <ProcessTable headers={headers} rows={rows} onRowClick={handleRowClick} />
+          </div>
         </div>
     );
 };
