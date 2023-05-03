@@ -1,11 +1,40 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+import { AppContext } from '../AppContext';
 import Table from './Table';
 import './FoundAddressesSection.css';
 
 const FoundAddressesSection = () => {
-  const headers = ['Address', '	Value', 'Previous'];
-  const rows = [
-  ];
+  const { selectedAgentUUID, selectedPID, newScanLaunched, setNewScanLaunched } = useContext(AppContext);
+  const [addresses, setAddresses] = useState([]);
+
+  const fetchAddresses = async () => {
+    if (selectedAgentUUID && selectedPID && newScanLaunched) {
+      // Replace this with the actual call to fetch addresses from the database
+      const fetchedAddresses = []; // Dummy data for now
+      return fetchedAddresses;
+    }
+    return [];
+  };
+
+  useEffect(() => {
+    const loadAddresses = async () => {
+      const newAddresses = await fetchAddresses();
+      setAddresses(newAddresses);
+      setNewScanLaunched(false);
+    };
+
+    if (newScanLaunched) {
+      loadAddresses();
+    }
+  }, [newScanLaunched, setNewScanLaunched]);
+
+  useEffect(() => {
+    // Clear addresses when either agent UUID or PID is not selected
+    setAddresses([]); 
+  }, [selectedAgentUUID, selectedPID]);
+
+  const headers = ['Address', 'Value', 'Previous'];
+  const rows = addresses; // Assuming the addresses data is in the desired format
 
   return (
     <div className="table-section found-addresses">

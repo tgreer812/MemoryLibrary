@@ -18,7 +18,15 @@ def command(func):
 
 @command
 def scan(args=None):
-    print("In scan")
+    """
+    Scan a process's memory for a specific value.
+
+    If `args` is None, return an ArgumentParser for the command.
+    Otherwise, execute the command and return a dictionary containing the result of the memory scan.
+
+    :param args: Parsed command arguments, or None to return an ArgumentParser
+    :return: A dictionary containing the result of the memory scan, or an ArgumentParser if args is None
+    """
     if args is None:
         # Define command arguments
         parser = argparse.ArgumentParser()
@@ -28,20 +36,64 @@ def scan(args=None):
         parser.add_argument("--start", type=int, required=True)
         parser.add_argument("--stop", type=int, required=True)
         parser.add_argument("--maxfound", type=int)
+        parser.add_argument("--alignment", type=int, default=1)  # Add missing argument
         return parser
 
     print(f"Scan command with args: {args}")
 
+    # Parse value type
+    value_type = MemoryLibApi.get_value_type(args.type)
+
+    # Convert value to appropriate type
+    value = None
+    if value_type == MemoryLibApi.ValueType.VT_INTEGER:
+        value = int(args.value)
+    elif value_type == MemoryLibApi.ValueType.VT_FLOAT:
+        value = float(args.value)
+    elif value_type == MemoryLibApi.ValueType.VT_STRING:
+        value = args.value
+
+    # Initialize found_addresses list
+    found_addresses = []
+
+    # Call memory_scan
+    found_count = MemoryLibApi.memory_scan(
+        args.pid,
+        value_type,
+        value,
+        args.start,
+        args.stop,
+        args.alignment,  # Pass the alignment argument
+        found_addresses,
+        args.maxfound if args.maxfound is not None else 1024  # Set default value for maxfound
+    )
+
+    # Create response object
+    response = {
+        "found_count": found_count,
+        "found_addresses": found_addresses
+    }
+
+    return response
+
+
 @command
 def process_list(args=None):
-    print("In process_list")
+    """
+    Get a list of running processes.
+
+    If `args` is None, return an ArgumentParser for the command.
+    Otherwise, execute the command and return a dictionary containing the list of running processes.
+
+    :param args: Parsed command arguments, or None to return an ArgumentParser
+    :return: A dictionary containing the list of running processes, or an ArgumentParser if args is None
+    """
     if args is None:
         # Define command arguments
         parser = argparse.ArgumentParser()
         parser.add_argument("--maxprocesses", type=int, required=False, default=1024)
         return parser
 
-    print(f"Process list command with args: {args}")
     proc_list = []
     response = {}
     response["processes"] = []
