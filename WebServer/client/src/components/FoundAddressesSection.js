@@ -1,46 +1,60 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useCallback } from 'react';
 import { AppContext } from '../AppContext';
 import Table from './Table';
+import Backend from '../utility/backend';
 import './FoundAddressesSection.css';
 
 const FoundAddressesSection = () => {
-  const { selectedAgentUUID, selectedPID, newScanLaunched, setNewScanLaunched } = useContext(AppContext);
+  const { selectedAgentUUID, selectedPID } = useContext(AppContext);
   const [addresses, setAddresses] = useState([]);
+  const [addressesSet, setAddressesSet] = useState(false);
 
-  const fetchAddresses = async () => {
-    if (selectedAgentUUID && selectedPID && newScanLaunched) {
-      // Replace this with the actual call to fetch addresses from the database
-      const fetchedAddresses = []; // Dummy data for now
-      return fetchedAddresses;
+  const getAddresses = useCallback(async () => {
+    if (selectedAgentUUID && selectedPID && !addressesSet) {
+      const agent = await Backend.getAgentByUUID(selectedAgentUUID);
+      if (agent && agent.command_results && agent.command_results.scan) {
+        const foundAddresses = agent.command_results.scan.found_addresses;
+        const value = agent.command_results.scan.value;
+        // Combine addresses and values into a single array
+        const combinedAddresses = foundAddresses.map((address, index) => [address, value]);
+        return combinedAddresses;
+      }
     }
     return [];
-  };
+  }, [selectedAgentUUID, selectedPID, addressesSet]);
 
   useEffect(() => {
-    const loadAddresses = async () => {
-      const newAddresses = await fetchAddresses();
-      setAddresses(newAddresses);
-      setNewScanLaunched(false);
-    };
+    if (selectedAgentUUID && selectedPID && !addressesSet) {
+      setAddresses([]);
+      const pollAddresses = async () => {
+        const fetchedAddresses = await getAddresses();
+        if (fetchedAddresses.length > 0) {
+          setAddresses(fetchedAddresses);
+          setAddressesSet(true);
+        }
+      };
+      pollAddresses();
+      const intervalRef = setInterval(pollAddresses, 1000);
 
-    if (newScanLaunched) {
-      loadAddresses();
+      return () => {
+        clearInterval(intervalRef);
+      };
     }
-  }, [newScanLaunched, setNewScanLaunched]);
+  }, [selectedAgentUUID, selectedPID, getAddresses, addressesSet]);
 
   useEffect(() => {
     // Clear addresses when either agent UUID or PID is not selected
-    setAddresses([]); 
+    setAddresses([]);
   }, [selectedAgentUUID, selectedPID]);
 
-  const headers = ['Address', 'Value', 'Previous'];
-  const rows = addresses; // Assuming the addresses data is in the desired format
+  const headers = ['Address', 'Value'];
+  //const rows = addresses; // Assuming the addresses data is in the desired format
 
   return (
     <div className="table-section found-addresses">
       <div className="table-wrapper">
         <div className="table-container">
-          <Table headers={headers} rows={rows} />
+          <Table headers={headers} rows={addresses} />
         </div>
       </div>
       <div className="down-arrow-container">

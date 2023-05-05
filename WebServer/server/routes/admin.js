@@ -48,7 +48,7 @@ adminRouter.put('/agent/:agent_uuid', async (req, res) => {
 
 adminRouter.get('/agent/:uuid/', async (req, res) => {
     // print out the UUID
-    console.log(req.params.uuid);
+    //console.log(req.params.uuid);
 
     try {
         // try to retrieve agent from database
@@ -70,7 +70,7 @@ adminRouter.get('/agent/:uuid/', async (req, res) => {
 
 adminRouter.get('/agent/:uuid/taskqueue', async (req, res) => {
     // print out the UUID
-    console.log(req.params.uuid);
+    //console.log(req.params.uuid);
 
     try {
         // try to retrieve agent from database

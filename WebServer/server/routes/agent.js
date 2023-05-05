@@ -4,7 +4,7 @@ const agentRouter = express.Router();
 const { database } = require('../utility/db');
 
 agentRouter.use('/', (req, res, next) => {
-    console.log(req.session);
+    //console.log(req.session);
     next();
 });
 
@@ -13,7 +13,7 @@ agentRouter.use('/', (req, res, next) => {
 
 agentRouter.get('/:uuid/taskqueue', async (req, res) => {
     // print out the UUID
-    console.log(req.params.uuid);
+    //console.log(req.params.uuid);
 
     try {
         // try to retrieve agent from database
@@ -21,7 +21,7 @@ agentRouter.get('/:uuid/taskqueue', async (req, res) => {
 
         // if agent is found, return the agent and tasks
         if (agent) {
-            console.log(agent);
+            //console.log(agent);
             return res.status(200).send(agent.task_queue);
         } else {
             // if agent is not found, create it

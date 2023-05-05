@@ -141,40 +141,36 @@ const database = {
         throw new Error('Agent not found');
       }
   
-      // Grab the command from the task_queue
       let command = agent.task_queue.find((task) => task.taskid === taskid).command;
       console.log("Command corresponding to result:", command);
-
-      let command_results = agent.command_results;
-      if (!command_results) {
-        command_results = {
-          [command]: result
-        };
-      } else {
-        command_results[command] = result;
-      }
-
-      agent.command_results = command_results;
-      //console.log("Agent command results:", agent.command_results);
-      // Mark the command_results field as modified
-      //agent.markModified('command_results');
   
-      // Remove the task from the task_queue
+      console.log("Result received:", result); // Log the result received
+  
+      if (!agent.command_results) {
+        agent.command_results = {};
+      }
+  
+      agent.command_results[command] = result[command];
+  
+      console.log("Updated command_results:", agent.command_results); // Log the updated command_results
+  
       agent.task_queue = agent.task_queue.filter((task) => task.taskid !== taskid);
   
-      // Update the last_seen field
       agent.last_seen = new Date();
   
-      // Save the updated agent document
-      await agent.save();
-  
+      await AgentModel.findOneAndUpdate({ uuid }, agent, { new: true });
+      //await agent.save();
+      const updatedAgent = await AgentModel.findOne({ uuid });
+      console.log('Updated agent from DB:', updatedAgent);
+
       return agent;
     } catch (err) {
       console.error(err);
       throw err;
     }
-  },
-      
+  }
+  ,
+  
   async removeAgentTaskByUUID(uuid, taskid) {
     try {
       const foundAgent = await AgentModel.findOne({ uuid });

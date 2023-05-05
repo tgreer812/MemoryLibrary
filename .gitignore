@@ -40,3 +40,5 @@
 *.tlog
 *.pyc
 MemDLLTest/.vs/MemDLLTest/v17/ipch/AutoPCH/df7e1b313edea633/MEMORYLIB.ipch
+*.pyc
+*.pyc

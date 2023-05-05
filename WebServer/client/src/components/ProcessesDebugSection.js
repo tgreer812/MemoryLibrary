@@ -30,7 +30,7 @@ const ProcessesDebugSection = () => {
             const agent = await Backend.getAgentByUUID(selectedAgentUUID);
             if (agent) {
                 try {
-                    const processes = agent.command_results.process_list.process_list.processes;
+                    const processes = agent.command_results.process_list.processes;
                     return processes;
                 } catch (err) {
                     console.log("Error: " + err);

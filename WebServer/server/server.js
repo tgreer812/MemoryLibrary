@@ -31,6 +31,7 @@ app.use(session({
     secure: false,
     sameSite: 'strict',
   },
+  logFn: function () {},
 }));
 
 app.use(passport.initialize());

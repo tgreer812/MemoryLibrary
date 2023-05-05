@@ -57,20 +57,31 @@ def scan(args=None):
     found_addresses = []
 
     # Call memory_scan
-    found_count = MemoryLibApi.memory_scan(
-        args.pid,
-        value_type,
-        value,
-        args.start,
-        args.stop,
-        args.alignment,  # Pass the alignment argument
-        found_addresses,
-        args.maxfound if args.maxfound is not None else 1024  # Set default value for maxfound
-    )
+    # found_count = MemoryLibApi.memory_scan(
+    #     args.pid,
+    #     value_type,
+    #     value,
+    #     args.start,
+    #     args.stop,
+    #     args.alignment,  # Pass the alignment argument
+    #     found_addresses,
+    #     args.maxfound if args.maxfound is not None else 1024  # Set default value for maxfound
+    # )
 
     # Create response object
+    # response = {
+    #     "found_count": found_count,
+    #     "found_addresses": found_addresses
+    # }
+
+    # 10 hard coded found addresses for testing
+    # TODO: Remove this
+    found_addresses = [0x12345678, 0x87654321, 0x12345678, 0x87654321, 0x12345678, 0x87654321, 0x12345678, 0x87654321, 0x12345678, 0x87654321]
+
     response = {
-        "found_count": found_count,
+        "found_count": 10,
+        "value": value,
+        "value_type": value_type,
         "found_addresses": found_addresses
     }
 

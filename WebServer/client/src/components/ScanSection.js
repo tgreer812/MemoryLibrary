@@ -14,10 +14,10 @@ const ScanSection = () => {
     await Backend.taskAgentByUUID(selectedAgentUUID, "scan", {
       pid: selectedPID, // Replace with actual PID
       type: "int", // Replace with actual type ('int', 'float', or 'string')
-      value: selectedPID, // Replace with actual value as a string
+      value: value, // Replace with actual value as a string
       start: 0x10000, // Replace with actual start address
       stop: 0x7FFFFFFFFFFF, // Replace with actual stop address
-      maxfound: 100000, // Replace with actual maximum number of found addresses
+      maxfound: 50000, // Replace with actual maximum number of found addresses
       alignment: 4, // Replace with actual alignment value (optional, default is 1)
   });
   
