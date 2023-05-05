@@ -8,12 +8,13 @@
 #include "ValueType.h"
 #include "MemoryScan.h"
 #include "MemoryLib.h"
-
+#include "Logger.h"
 
 template <typename T>
-std::vector<std::pair<size_t, T>> scan_memory(DWORD pid, T value, size_t start_address, size_t end_address, size_t alignment, const std::vector<size_t>& input_found_addresses = {}) {
+std::vector<std::pair<uintptr_t, T>> scan_memory(DWORD pid, T value, uintptr_t start_address, uintptr_t end_address, size_t alignment, const std::vector<uintptr_t>& input_found_addresses = {}) {
     HANDLE hProcess = OpenProcess(PROCESS_VM_READ | PROCESS_QUERY_INFORMATION, FALSE, pid);
     if (hProcess == NULL) {
+        LOG_ERROR("Failed to open process - Error code: %d", GetLastError());
         throw std::runtime_error("Cannot open process");
     }
 

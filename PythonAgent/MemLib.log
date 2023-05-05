@@ -1,0 +1,5 @@
+INFO [C:\Users\tgree\source\repos\MemoryLibrary\MemoryLib\MemoryLib.cpp:39] Called _MemoryScan with pid: 27432, value_type: 0, value_size: 4, start_address: 65536, end_address: 140737488355327, alignment: 4, max_found: 100000
+INFO [C:\Users\tgree\source\repos\MemoryLibrary\MemoryLib\MemoryLib.cpp:39] Called _MemoryScan with pid: 27432, value_type: 0, value_size: 4, start_address: 65536, end_address: 140737488355327, alignment: 4, max_found: 100000
+INFO [C:\Users\tgree\source\repos\MemoryLibrary\MemoryLib\MemoryLib.cpp:39] Called _MemoryScan with pid: 27432, value_type: 0, value_size: 4, start_address: 65536, end_address: 140737488355327, alignment: 4, max_found: 100000
+INFO [C:\Users\tgree\source\repos\MemoryLibrary\MemoryLib\MemoryLib.cpp:39] Called _MemoryScan with pid: 27432, value_type: 0, value_size: 4, start_address: 65536, end_address: 140737488355327, alignment: 4, max_found: 100000
+INFO [C:\Users\tgree\source\repos\MemoryLibrary\MemoryLib\MemoryLib.cpp:39] Called _MemoryScan with pid: 27432, value_type: 0, value_size: 4, start_address: 65536, end_address: 140737488355327, alignment: 4, max_found: 100000

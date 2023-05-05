@@ -7,7 +7,7 @@ adminRouter.post('/agent/:agent_uuid/taskqueue', async (req, res) => {
     const uuid = req.params.agent_uuid;
 
     const task = req.body;
-
+    console.log(task);
     try {
         let updatedAgent = await database.taskAgentByUUID(uuid, task.command, task.arguments);
         return res.status(200).send(updatedAgent);

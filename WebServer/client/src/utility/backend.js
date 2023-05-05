@@ -115,12 +115,34 @@ let Backend = {
         }
     },
 
+    /**
+     * Sends a task to the agent with the specified UUID.
+     *
+     * @param {string} uuid - The UUID of the agent.
+     * @param {string} command - The command to be executed by the agent.
+     * @param {(Array|string[]|Object)} command_args - The command arguments, either as an array of strings or as a JSON object.
+     *                                                 If provided as a JSON object, keys and values are converted to command line arguments.
+     * @return {Promise<void>} - A promise that resolves when the task has been sent successfully or rejects with an error.
+     */
     async taskAgentByUUID(uuid, command, command_args) {
         console.log("taskAgent called");
-
+    
+        let args = [];
+    
+        if (Array.isArray(command_args)) {
+            args = command_args;
+        } else if (typeof command_args === 'object') {
+            for (const [key, value] of Object.entries(command_args)) {
+                args.push(`--${key}`, value.toString());
+            }
+        } else {
+            console.error('Invalid command_args format');
+            return;
+        }
+    
         let task = {
             command: command,
-            arguments: command_args
+            arguments: args
         };
         let path = "/api/admin/agent/" + uuid + "/taskqueue";
         try {
@@ -136,7 +158,7 @@ let Backend = {
         } catch (error) {
             console.error('Error:', error);
         }
-    },
+    },    
 
     async getAgentList() {
         console.log("getAgentList called");
@@ -170,7 +192,12 @@ let Backend = {
         } catch (error) {
             console.error('Error:', error);
         }
-    }
+    },
+
+    async newScan(uuid, value) {
+
+    },
+    async nextScan(uuid, value) {},
 
 }
 

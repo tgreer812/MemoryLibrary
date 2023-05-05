@@ -50,7 +50,16 @@ def run(args):
         found_addresses = config["found_addresses"]
         num_found = 0
         try:
-            num_found = memory_scan(pid, value_type, value, start_address, end_address, alignment, found_addresses, max_found)
+            num_found = memory_scan(
+                pid, 
+                value_type, 
+                value, 
+                start_address, 
+                end_address, 
+                alignment, 
+                found_addresses, 
+                max_found
+            )
         except Exception as e:
             print(f"Error: {e}")
             return

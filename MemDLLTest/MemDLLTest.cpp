@@ -29,7 +29,7 @@ int main()
     *(value) = 37;
 
     int result = MemoryScan(
-        372,
+        27432,
         VT_INTEGER,
         (const void*)value,
         sizeof(int),

@@ -37,8 +37,10 @@ def send_task_result(client_uuid : str, host : str, port : int, task_id : int, r
     return True
 
 def handle_tasks(client_uuid, host, port, tasks : list):
-    log.debug(f"Received tasks: {tasks}\n")
-
+    #log.debug(f"Received tasks: {tasks}\n")
+    if (len(tasks) == 0):
+        return
+    log.debug(f"Received tasks: {tasks}")
     for task in tasks:
         log.debug(f"Handling task: {task}")
         response_body = handle_task(task)
@@ -56,8 +58,6 @@ def tasking_loop(client_uuid, host, port):
 
             if response.status_code == 200:
                 task_que = response.json()
-                log.debug(f"Received tasking: {task_que}")
-                log.debug(f"Type: {type(task_que)}")
                 handle_tasks(client_uuid, host, port, task_que)
             
             elif response.status_code == 404:

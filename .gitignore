@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+*.vsidx
+*.vsidx
+*.ipch
+*.ipch
+*.ipch
+*.db
+*.sarif
+*.tlog
+*.pyc
+MemDLLTest/.vs/MemDLLTest/v17/ipch/AutoPCH/df7e1b313edea633/MEMORYLIB.ipch

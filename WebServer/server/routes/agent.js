@@ -70,6 +70,7 @@ agentRouter.post('/:uuid/:taskid', async (req, res) => {
         // If agent is found, update the agent
         console.log("Updating agent task results");
         let updatedAgent = await database.processAgentTaskResultByUUID(req.params.uuid, taskid, req.body);
+        return res.status(200).send(updatedAgent);
 
     } catch (err) {
         console.log(err);

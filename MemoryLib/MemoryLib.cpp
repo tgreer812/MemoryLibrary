@@ -10,54 +10,94 @@
 #include <thread>
 #include <mutex>
 #include <iostream>
+#include "Logger.h"
+#include <stdexcept>
+#include <excpt.h>
 
+//#define CATCH_STRUCTURED_EXCEPTIONS
+
+#ifdef CATCH_STRUCTURED_EXCEPTIONS
+int FilterStructuredException(unsigned int code, struct _EXCEPTION_POINTERS* ep) {
+    // Log the exception code
+    std::string exception_log = "Structured exception caught in _MemoryScan, code: " + std::to_string(code);
+    LOG_ERROR(exception_log);
+    return EXCEPTION_EXECUTE_HANDLER;
+}
+#endif // CATCH_STRUCTURED_EXCEPTIONS
 
 //MEMORYLIB_API 
 int _MemoryScan(DWORD pid, ValueType value_type, const void* value, size_t value_size, uintptr_t start_address, uintptr_t end_address, size_t alignment, uintptr_t* found_addresses, size_t max_found, const std::vector<size_t>& input_found_addresses) {
-    try {
-        size_t i = 0;
+    LOG_INFO(
+        "Called _MemoryScan with pid: %d, value_type: %d, value_size: %zu, start_address: %zu, end_address: %zu, alignment: %zu, max_found: %zu",
+        pid, 
+        value_type, 
+        value_size, 
+        start_address, 
+        end_address, 
+        alignment, 
+        max_found
+    );
 
-        switch (value_type) {
-        case VT_INTEGER:
-            if (value_size == sizeof(int)) {
-                auto addresses = scan_memory<int>(pid, *reinterpret_cast<const int*>(value), start_address, end_address, alignment, input_found_addresses);
-                for (const auto& addr : addresses) {
-                    if (i < max_found) {
-                        found_addresses[i] = addr.first;
-                        i++;
-                    }
-                    else {
-                        break;
-                    }
-                }
-            }
-            break;
-        case VT_FLOAT:
-            if (value_size == sizeof(float)) {
-                auto addresses = scan_memory<float>(pid, *reinterpret_cast<const float*>(value), start_address, end_address, alignment, input_found_addresses);
-                for (const auto& addr : addresses) {
-                    if (i < max_found) {
-                        found_addresses[i] = addr.first;
-                        i++;
-                    }
-                    else {
-                        break;
+
+#ifdef CATCH_STRUCTURED_EXCEPTIONS
+    __try {
+#endif
+        try {
+            size_t i = 0;
+
+            switch (value_type) {
+            case VT_INTEGER:
+                if (value_size == sizeof(int)) {
+                    auto addresses = scan_memory<int>(pid, *reinterpret_cast<const int*>(value), start_address, end_address, alignment, input_found_addresses);
+                    for (const auto& addr : addresses) {
+                        if (i < max_found) {
+                            found_addresses[i] = addr.first;
+                            i++;
+                        }
+                        else {
+                            break;
+                        }
                     }
                 }
+                break;
+            case VT_FLOAT:
+                if (value_size == sizeof(float)) {
+                    auto addresses = scan_memory<float>(pid, *reinterpret_cast<const float*>(value), start_address, end_address, alignment, input_found_addresses);
+                    for (const auto& addr : addresses) {
+                        if (i < max_found) {
+                            found_addresses[i] = addr.first;
+                            i++;
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                }
+                break;
+            case VT_STRING:
+                // Implement string scanning here
+                break;
+            default:
+                return -1;
             }
-            break;
-        case VT_STRING:
-            // Implement string scanning here
-            break;
-        default:
+
+            return static_cast<int>(i);
+        }
+        catch (const std::exception& e) {
+            LOG_ERROR("Exception caught in _MemoryScan: %s", e.what());
             return -1;
         }
-
-        return static_cast<int>(i);
+        catch (...) {
+            LOG_ERROR("Unknown exception caught in _MemoryScan");
+            return -1;
+        }
+#ifdef CATCH_STRUCTURED_EXCEPTIONS
+    __except (FilterStructuredException(GetExceptionCode(), GetExceptionInformation())) {
+        // Handle the structured exception here
+        result = -1;
     }
-    catch (...) {
-        return -1;
-    }
+    return result;
+#endif
 }
 
 
